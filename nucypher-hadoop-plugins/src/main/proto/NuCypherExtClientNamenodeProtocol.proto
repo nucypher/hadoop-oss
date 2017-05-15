@@ -1,0 +1,26 @@
+
+option java_package = "com.nucypher.hadoop.hdfs.protocol.proto";
+option java_outer_classname = "NuCypherExtClientNamenodeProtocolProtos";
+option java_generic_services = true;
+option java_generate_equals_and_hash = true;
+package hadoop.hdfs;
+
+import "xattr.proto";
+
+message SetXAttrSingleRequestProto {
+    required string src          = 1;
+    repeated XAttrProto xAttr    = 2;
+}
+
+message SetXAttrsRequestProto {
+    repeated SetXAttrSingleRequestProto xAttrsToSet = 1;
+    optional uint32 flag         = 2; //bits set using XAttrSetFlagProto
+}
+
+message SetXAttrsResponseProto {
+}
+
+service NuCypherExtClientNamenodeProtocol {
+  rpc setXAttrs(SetXAttrsRequestProto)
+      returns(SetXAttrsResponseProto);
+}

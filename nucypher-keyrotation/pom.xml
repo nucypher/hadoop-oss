@@ -1,0 +1,111 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>com.nucypher</groupId>
+    <artifactId>nucypher-project</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <relativePath>../nucypher-project</relativePath>
+  </parent>
+  <artifactId>nucypher-keyrotation</artifactId>
+  <version>0.0.1-SNAPSHOT</version>
+  <packaging>jar</packaging>
+
+  <name>NuCypher Keyrotation</name>
+  <url>http://maven.apache.org</url>
+
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-yarn-client</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-common</artifactId>
+       <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hadoop</groupId>
+      <artifactId>hadoop-hdfs</artifactId>
+    </dependency>
+    
+    <dependency>
+      <groupId>com.nucypher</groupId>
+      <artifactId>nucypher-crypto</artifactId>
+      <version>0.0.1-SNAPSHOT</version>
+      <scope>compile</scope>
+    </dependency>
+    
+     <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.3.2</version>
+        </dependency>
+      <dependency>
+          <groupId>com.nucypher</groupId>
+          <artifactId>nucypher-hadoop-plugins</artifactId>
+          <version>0.0.1-SNAPSHOT</version>
+      </dependency>
+
+  </dependencies>
+  <build>
+    <plugins>
+        <!--<plugin>
+            <groupId>org.apache.maven.plugins</groupId>  
+            <artifactId>maven-dependency-plugin</artifactId>  
+            <executions>  
+                <execution>  
+                    <id>copy-dependencies</id>  
+                    <phase>prepare-package</phase>  
+                    <goals>  
+                        <goal>copy-dependencies</goal>  
+                    </goals>  
+                    <configuration>  
+                        <includeArtifactIds>nucypher-crypto,bcprov-jdk15on,commons-lang3</includeArtifactIds>
+                        <outputDirectory>${project.build.directory}/classes/lib</outputDirectory>  
+                        <overWriteReleases>false</overWriteReleases>  
+                        <overWriteSnapshots>false</overWriteSnapshots>  
+                        <overWriteIfNewer>true</overWriteIfNewer>  
+                    </configuration>  
+                </execution>  
+            </executions>  
+        </plugin>  -->
+        <plugin>  
+            <groupId>org.apache.maven.plugins</groupId>  
+            <artifactId>maven-jar-plugin</artifactId>  
+            <configuration>  
+                <archive>  
+                    <manifest>  
+                        <!-- <addClasspath>true</addClasspath>  
+                        <classpathPrefix>lib/</classpathPrefix>  
+                        <mainClass>Client</mainClass>  -->
+                    </manifest>  
+                                <manifestEntries>
+                                     <Class-Path>lib/</Class-Path>
+                                </manifestEntries>
+                </archive>  
+            </configuration>  
+        </plugin>  
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.3</version>
+            <configuration>
+                <source>1.7</source>
+                <target>1.7</target>
+            </configuration>
+        </plugin>
+    </plugins>
+  </build>
+</project>

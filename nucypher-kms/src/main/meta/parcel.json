@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "name": "NUCYPHERKMS",
+  "version": "0.0.1-1.cdh5.7.1.p0.1",
+  "setActiveSymlink": true,
+  "conflicts":          "CDH (<< 5.7.1), CDH (>> 5.7.2.)",
+  "depends": "",
+  "replaces": "KMS",
+  "conflicts": "",
+
+  "provides": [
+    "nucypher-kms"
+  ],
+
+  "scripts": {
+    "defines": "nucypher_kms_env.sh"
+  },
+
+  "packages": [
+    { "name"   : "nucypher-kms",
+      "version": "0.0.1+cdh5.7.1+0~el7-cdh5.7.1"
+    }
+  ],
+
+  "components": [
+    { "name"       : "nucypher-kms",
+      "version"    : "0.0.1-cdh5.7.1-SNAPSHOT",
+      "pkg_version": "0.0.1-cdh5.7.1-SNAPSHOT"
+    }
+  ],
+
+  "users": {
+    "kms": {
+      "longname"    : "NuCypher KMS",
+      "home"        : "/var/lib/nucypher-kms",
+      "shell"       : "/bin/bash",
+      "extra_groups": [ "kms" ]
+    }
+  },
+
+  "groups": [
+    "kms"
+  ]
+}

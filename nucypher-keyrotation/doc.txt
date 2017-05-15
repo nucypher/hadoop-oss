@@ -1,0 +1,12 @@
+
+
+refer run.sh
+
+need to specify nucypher-crypto-0.0.1-SNAPSHOT.jar and bcprov-jdk15on-1.54.jar path as run.sh's last argument
+
+hadoop jar prkeyrotation-0.0.1-SNAPSHOT.jar Client  <prkeyrotation-0.0.1-SNAPSHOT.jar hdfs path>  <dependent lib paths>
+
+for example:
+
+curpath=`pwd`
+hadoop jar prkeyrotation-0.0.1-SNAPSHOT.jar Client    hdfs:///user/prkeyrotation-0.0.1-SNAPSHOT.jar  /enczone1 $curpath/nucypher-crypto-0.0.1-SNAPSHOT.jar,$curpath/bcprov-jdk15on-1.54.jar

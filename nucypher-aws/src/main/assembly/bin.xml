@@ -1,0 +1,23 @@
+<assembly>
+  <id>zerodb-aws</id>
+  <formats>
+    <format>tar.gz</format>
+  </formats>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <fileSets>
+    <fileSet>
+      <directory>src/main/scripts</directory>
+      <outputDirectory>scripts</outputDirectory>
+      <includes>
+        <include>*.sh</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>src/main/config</directory>
+      <outputDirectory>config</outputDirectory>
+      <includes>
+        <include>*.json</include>
+      </includes>
+    </fileSet>
+  </fileSets>
+</assembly>

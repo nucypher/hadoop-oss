@@ -1,0 +1,125 @@
+#!/bin/bash
+
+set -x
+
+if [ -z "$1" ]
+then
+	echo "Invalid argument [$1];"
+	echo "Usage: Only start | stop | restart | version, are supported."
+	exit;
+fi
+action=$1
+action=`echo $action | tr '[:lower:]' '[:upper:]'`
+realScriptPath=`readlink -f $0`
+realScriptDir=`dirname $realScriptPath`
+
+# Time marker for both stderr and stdout
+date; date 1>&2
+
+CMD=$1
+shift
+
+DEFAULT_KMS_HOME=/usr/lib/hadoop-kms
+
+# Use CDH_KMS_HOME if available
+export KMS_HOME=${KMS_HOME:-$NUCYPHER_KMS_PREFIX}
+# If KMS_HOME is still not set, use the default value
+export KMS_HOME=${KMS_HOME:-$DEFAULT_KMS_HOME}
+
+# Set KMS config dir to conf dir
+export KMS_CONFIG=${CONF_DIR}
+export NUCYPHER_KMS_CONF_DIR=${KMS_CONFIG}
+
+# We want verbose startup logs
+export KMS_SILENT=false
+
+KMS_RUN=$CONF_DIR/run/
+export KMS_TEMP=$KMS_RUN
+
+# Need to set the libexec dir to find kms-config.sh
+export HADOOP_HOME=${NUCYPHER_KMS_PREFIX}
+export HADOOP_LIBEXEC_DIR=${HADOOP_HOME}/libexec
+export HADOOP_COMMON_HOME=${NUCYPHER_KMS_PREFIX}
+export HADOOP_PREFIX=${NUCYPHER_KMS_PREFIX}
+
+# Needed to find catalina.sh
+
+export CATALINA_TMPDIR=$PWD/temp
+# Create temp directory for Catalina
+mkdir -p $CATALINA_TMPDIR
+
+# Choose between the non-SSL and SSL tomcat configs
+#TOMCAT_CONFIG_FOLDER=conf
+#if [ "x$SSL_ENABLED"  == "xtrue" ]; then
+#    TOMCAT_CONFIG_FOLDER=tomcat-conf.https
+#fi
+
+# Package settings for tomcat deployment
+    DEPLOY_SCRIPT_BASE=${KMS_HOME}
+#TOMCAT_CONF_BASE=${KMS_HOME}/share/hadoop/kms/tomcat/
+
+# Rejigger the above if we're using parcels
+#if [ "$CDH_KMS_HOME" != "$DEFAULT_KMS_HOME" ]; then
+#    TOMCAT_CONF_BASE=$CDH_KMS_HOME/../../etc/hadoop-kms/
+#    DEPLOY_SCRIPT_BASE=$CDH_KMS_HOME
+#fi
+
+# Construct the actual TOMCAT_CONF from the base and folder
+#TOMCAT_CONF=$TOMCAT_CONF_BASE/$TOMCAT_CONFIG_FOLDER
+TOMCAT_CONF=$TOMCAT_CONF_BASE
+
+export CATALINA_BASE="$KMS_STAGING_DIR/tomcat-deployment"
+export HADOOP_CATALINA_HOME="$CATALINA_BASE"
+export KMS_CATALINA_HOME="$HADOOP_CATALINA_HOME"
+
+# Set up the number of threads and heap size
+export KMS_MAX_THREADS
+export CATALINA_OPTS="-Xmx${KMS_HEAP_SIZE}  "
+#export HADOOP_KEYSTORE_PASSWORD="$KMS_SSL_KEYSTORE_PASS"
+
+# Deploy KMS tomcat app.
+env TOMCAT_CONF=${TOMCAT_CONF} TOMCAT_DEPLOYMENT=${CATALINA_BASE} KMS_HOME=${KMS_HOME} \
+    bash ${DEPLOY_SCRIPT_BASE}/tomcat-deployment.sh
+
+# Print out all the env vars we've set
+echo "KMS_HOME is ${KMS_HOME}"
+echo "KMS_LOG is ${KMS_LOG}"
+echo "KMS_CONFIG is ${KMS_CONFIG}"
+echo "KMS_MAX_THREADS is ${KMS_MAX_THREADS}"
+echo "KMS_HEAP_SIZE is ${KMS_HEAP_SIZE}"
+echo "TOMCAT_CONF is ${TOMCAT_CONF}"
+echo "CATALINA_BASE is ${CATALINA_BASE}"
+echo "HADOOP_CATALINA_HOME is ${HADOOP_CATALINA_HOME}"
+echo "SSL_ENABLED is ${SSL_ENABLED}"
+echo "KMS_SSL_KEYSTORE_FILE is ${KMS_SSL_KEYSTORE_FILE}"
+
+set
+
+if [ "${action}" == "START" ]; then
+    cmd="${KMS_HOME}/sbin/kms.sh start"
+    exec ${cmd}
+	echo "NuCypher KMS has started."
+	exit
+elif [ "${action}" == "STOP" ]; then
+    cmd="${KMS_HOME}/sbin/kms.sh stop"
+    exec ${cmd}
+    echo "NuCypher KMS has been stopped."
+	exit
+elif [ "${action}" == "RESTART" ]; then
+	echo "Restarting NuCypher KMS"
+	cmd="${KMS_HOME}/sbin/kms.sh stop"
+    exec ${cmd}
+	echo "NuCypher KMS has been stopped."
+	echo "NuCypher Ranger KMS."
+    cmd="${KMS_HOME}/sbin/kms.sh start"
+    exec ${cmd}
+    echo "NuCypher has started successfully."
+	exit
+elif [ "${action}" == "VERSION" ]; then
+    # TODO out version
+	exit
+else
+        echo "Invalid argument [$1];"
+        echo "Usage: Only start | stop | restart | version, are supported."
+        exit;
+fi

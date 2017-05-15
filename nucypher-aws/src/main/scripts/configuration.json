@@ -1,0 +1,25 @@
+[
+ {
+   "Classification": "core-site",
+   "Properties": {
+       "hadoop.security.key.default.bitlength": "128",
+       "hadoop.security.key.provider.path": "kms://http@localhost:16010/kms"
+   }
+ },
+ {
+   "Classification": "hdfs-site",
+   "Properties": {
+        "dfs.encryption.key.provider.uri": "kms://http@localhost:16010/kms"
+   }
+ },
+ {
+   "Classification": "yarn-site",
+   "Properties": {
+        "yarn.scheduler.minimum-allocation-mb": "2000",
+        "yarn.scheduler.maximum-allocation-mb": "3000",
+        "yarn.scheduler.increment-allocation-mb": "250",
+        "nucypher.ext.servicerpc-address": "_NUCYPHER_PLUGIN_URI_"
+
+   }
+ }
+]
